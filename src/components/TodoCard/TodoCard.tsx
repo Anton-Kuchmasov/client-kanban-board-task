@@ -47,7 +47,6 @@ export const TodoCard: React.FC<Props> = ({ todo }) => {
       })
     );
     await dispatch(fetchTodosFromUserID(userID));
-    console.log('Todo updated');
   };
 
   const handleDelete = (todoID: string): void => {

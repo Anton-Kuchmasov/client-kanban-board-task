@@ -1,30 +1,30 @@
-# React + TypeScript + Vite
+# Client (front-end) for Kanban-board-task
+In this task I've implemented a simple but reliable and easy-to-use UI for kanban-board.
+DEMO LINK: https://anton-kuchmasov.github.io/client-kanban-board-task/
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Technologies I've used on my way to deploy:
+- HTML/CSS as well;
+- Bulma.io for creating UI on the simplest way;
+- JS in case of base programming language for front-end solutions;
+- React.js for creating functional components (app application is React-based);
+- Axios lib in case of simplify http requests for taking data from back-end;
+- Redux.js to store all the data on one store;
+- React Beautiful DnD (drag-and-drop lib);
+- ESLint, Prettier for fixing code-style.
 
-Currently, two official plugins are available:
+# Important!
+Whenever you trying to grab the task from one column to another one, it takes the first place onto destination board.
+It was implemented in case of simply logic - whatever you trying to put onto "Done" or "In Progress", it should be much more important to work for than all another tasks.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+# User Instructions
+If you want to create a new ID, you can do this on two different ways:
+1. Creating a new ID after App is loaded;
+2. Creating a new ID after working with some oldest issues onto your prev kanban.
 
-## Expanding the ESLint configuration
+Creating a new ID within any tasks on prev are prohibited (button is disabled).
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+# Server store logic
+In case of best productivity, some of options (deleting/dragging cards etc.) can be done locally first, instead of sync with server.
+All server operations are still working, don't be in worry :)
 
-- Configure the top-level `parserOptions` property like this:
-
-```js
-export default {
-  // other rules...
-  parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname
-  }
-};
-```
-
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+Have a good experience!
