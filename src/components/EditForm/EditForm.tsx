@@ -1,6 +1,8 @@
 import React, { useState, useRef, useEffect } from 'react';
+
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCancel, faFloppyDisk } from '@fortawesome/free-solid-svg-icons';
+
 import { type Todo } from '../../types/Todo.ts';
 
 interface Props {
@@ -77,6 +79,7 @@ export const EditForm: React.FC<Props> = ({
           setEditedDescription(event.target.value);
         }}
       />
+
       <div className="control level is-flex is-justify-content-end p-3">
         <button
           type="button"
@@ -86,6 +89,7 @@ export const EditForm: React.FC<Props> = ({
         >
           <FontAwesomeIcon icon={faFloppyDisk} />
         </button>
+
         <button
           type="button"
           className="button button__cancel"

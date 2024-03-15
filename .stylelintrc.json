@@ -2,6 +2,7 @@
   "extends": ["stylelint-config-standard"],
   "plugins": ["stylelint-scss", "stylelint-no-unused-selectors"],
   "rules": {
-    "plugin/no-unused-selectors": true
+    "plugin/no-unused-selectors": true,
+    "selector-class-pattern": null
   }
 }

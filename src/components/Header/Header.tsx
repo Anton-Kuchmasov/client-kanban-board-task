@@ -1,5 +1,4 @@
 import React, { useEffect, useRef } from 'react';
-
 import { useAppDispatch, useAppSelector } from '../../app/hooks.ts';
 
 import { actions as UserActions } from '../../features/user/userSlice.ts';
@@ -7,6 +6,7 @@ import {
   actions as TodosActions,
   fetchAllUserIDs
 } from '../../features/todos/todosSlice.ts';
+
 import { Error } from '../../types/Error.ts';
 import { type RootState } from '../../app/store.ts';
 
@@ -16,6 +16,7 @@ export const Header: React.FC = () => {
     (state: RootState) => state.todos.items.length === 0
   );
   const userID = useAppSelector((state: RootState) => state.user.id);
+  const isLoading = useAppSelector((state: RootState) => state.todos.isLoading);
 
   const titleField = useRef<HTMLInputElement>(null);
 
@@ -79,19 +80,23 @@ export const Header: React.FC = () => {
                 className="input is-medium"
                 placeholder="Enter ID"
                 ref={titleField}
+                disabled={isLoading}
               />
+
               <div className="level-right ml-5 is-flex is-justify-content-space-between">
                 <button
                   type="submit"
                   className="button is-size-5 is-primary mr-3"
+                  disabled={isLoading}
                 >
                   Search todos
                 </button>
+
                 <button
                   type="submit"
                   className="button is-size-5 is-info"
                   onClick={handleNew}
-                  disabled={hasNoTodos && userID !== undefined}
+                  disabled={(hasNoTodos && userID !== undefined) || isLoading}
                 >
                   Create new board
                 </button>

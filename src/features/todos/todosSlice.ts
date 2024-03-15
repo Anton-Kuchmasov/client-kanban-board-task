@@ -6,11 +6,12 @@ import {
 } from '@reduxjs/toolkit';
 import axios from 'axios';
 
-import { type Todo } from '../../types/Todo.ts';
-import { TodoStatus } from '../../types/TodoStatus.ts';
 import { getIndex } from '../../helpers/getNewIndex.ts';
 import { Error } from '../../types/Error.ts';
+
+import { TodoStatus } from '../../types/TodoStatus.ts';
 import { type RootState } from '../../app/store.ts';
+import { type Todo } from '../../types/Todo.ts';
 
 axios.defaults.baseURL = 'https://api-kanban-board-task.onrender.com';
 
@@ -149,9 +150,6 @@ export const todosSlice = createSlice({
           existingTodo.index = index + 1;
         }
       });
-    },
-    setLoading: (state, action: PayloadAction<boolean>) => {
-      state.isLoading = action.payload;
     },
     setIsCreating: (state, action: PayloadAction<boolean>) => {
       state.isCreating = action.payload;

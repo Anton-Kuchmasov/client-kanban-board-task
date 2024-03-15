@@ -16,10 +16,7 @@
       "jsx": true
     }
   },
-  "plugins": ["react", "html", "@typescript-eslint"],
-  "settings": {
-    "html/html-extensions": [".html", ".we"]
-  },
+  "plugins": ["react", "@typescript-eslint"],
   "rules": {
     "@typescript-eslint/semi": ["error", "always"],
     "semi": ["error", "always"],

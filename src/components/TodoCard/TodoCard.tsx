@@ -1,10 +1,8 @@
 import React, { useState } from 'react';
+import { Draggable } from 'react-beautiful-dnd';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEdit, faTrash } from '@fortawesome/free-solid-svg-icons';
 
-import { type Todo } from '../../types/Todo.ts';
-import { Draggable } from 'react-beautiful-dnd';
-import { EditForm } from '../EditForm/EditForm.tsx';
 import { useAppDispatch, useAppSelector } from '../../app/hooks.ts';
 import {
   actions as TodosActions,
@@ -12,6 +10,9 @@ import {
   fetchTodosFromUserID,
   updateTodoOnServer
 } from '../../features/todos/todosSlice.ts';
+
+import { EditForm } from '../EditForm/EditForm.tsx';
+import { type Todo } from '../../types/Todo.ts';
 
 interface Props {
   todo: Todo;
@@ -72,15 +73,13 @@ export const TodoCard: React.FC<Props> = ({ todo }) => {
             {...provided.draggableProps}
             {...provided.dragHandleProps}
           >
-            {isEditing
-              ? (
+            {isEditing ? (
               <EditForm
                 todoToEdit={todo}
                 onSaveTodo={handleSaveTodo}
                 onCancelEdit={handleCancel}
               />
-                )
-              : (
+            ) : (
               <div className="card is-outlined is-info card-shadow has-border">
                 <div className="card-header-title is-size-4 is-flex is-justify-content-flex-start ">
                   {title}
@@ -96,6 +95,7 @@ export const TodoCard: React.FC<Props> = ({ todo }) => {
                   >
                     <FontAwesomeIcon icon={faEdit} />
                   </button>
+
                   <button
                     type="submit"
                     className="button button-delete"
@@ -107,7 +107,7 @@ export const TodoCard: React.FC<Props> = ({ todo }) => {
                   </button>
                 </div>
               </div>
-                )}
+            )}
           </div>
         );
       }}

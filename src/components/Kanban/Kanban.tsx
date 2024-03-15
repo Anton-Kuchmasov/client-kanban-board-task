@@ -6,6 +6,8 @@ import {
 } from 'react-beautiful-dnd';
 
 import { useAppDispatch, useAppSelector } from '../../app/hooks.ts';
+import { type RootState } from '../../app/store.ts';
+
 import {
   actions as TodosActions,
   updateAllTodosIndexes,
@@ -19,11 +21,18 @@ import { TodoStatus } from '../../types/TodoStatus.ts';
 import { type Todo } from '../../types/Todo.ts';
 import { EditForm } from '../EditForm/EditForm.tsx';
 import { Loader } from '../Loader/Loader.tsx';
-import { type RootState } from '../../app/store.ts';
 
 export const Kanban: React.FC = () => {
   const dispatch = useAppDispatch();
   const userID = useAppSelector((state: RootState) => state.user.id);
+  const isLoaded: boolean = useAppSelector(
+    (state: RootState) => state.todos.isLoading
+  );
+
+  const isCreating = useAppSelector(
+    (state: RootState) => state.todos.isCreating
+  );
+
   const normalizedUserID: number = Number(userID) !== 0 ? Number(userID) : 0;
 
   useEffect(() => {
@@ -36,14 +45,6 @@ export const Kanban: React.FC = () => {
   }, [userID]);
 
   const todos: Todo[] = useAppSelector((state: RootState) => state.todos.items);
-
-  const isLoaded: boolean = useAppSelector(
-    (state: RootState) => state.todos.isLoading
-  );
-
-  const isCreating = useAppSelector(
-    (state: RootState) => state.todos.isCreating
-  );
 
   const handlePressCreate = (): void => {
     dispatch(TodosActions.setIsCreating(true));
@@ -95,12 +96,12 @@ export const Kanban: React.FC = () => {
       return;
     }
 
-    const newTodos = [...todos];
-
     if (movedTodo.status === destinationColumn) {
+      const newTodos = [...todos];
       const sourceTodos = newTodos.filter((todo) => todo.id !== movedTodoId);
       const destinationIndex: number = destination.index;
       sourceTodos.splice(destinationIndex - 1, 0, movedTodo);
+
       dispatch(TodosActions.setTodos(sourceTodos));
       dispatch(TodosActions.updateLocalTodoIndexes());
 
@@ -109,7 +110,6 @@ export const Kanban: React.FC = () => {
     }
 
     if (movedTodo.status !== undefined) {
-      destination.index = 0;
       dispatch(
         TodosActions.updateLocalTodoStatus({
           id: movedTodoId,
@@ -129,13 +129,11 @@ export const Kanban: React.FC = () => {
     }
   };
 
-  return isLoaded
-    ? (
+  return isLoaded ? (
     <div className="is-flex is-justify-content-center">
       <Loader />
     </div>
-      )
-    : (
+  ) : (
     <>
       <div className="subtitle has-text-centered is-size-4">
         Your user ID is : {userID}
@@ -182,6 +180,7 @@ export const Kanban: React.FC = () => {
                 )}
               </Droppable>
             </div>
+
             <div className="column is-0"></div>
 
             <div className="column box is-rounded has-background-warning-light mt-5 mb-0">
@@ -199,6 +198,7 @@ export const Kanban: React.FC = () => {
                 )}
               </Droppable>
             </div>
+
             <div className="column is-0"></div>
 
             <div className="column box is-rounded has-background-primary-light mt-5">
@@ -220,5 +220,5 @@ export const Kanban: React.FC = () => {
         </div>
       </DragDropContext>
     </>
-      );
+  );
 };

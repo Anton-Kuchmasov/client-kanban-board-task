@@ -12,27 +12,24 @@ interface Props {
 }
 
 export const Board: React.FC<Props> = ({ name }) => {
-  const userTodos: Todo[] = useAppSelector(
+  const todosFromState: Todo[] = useAppSelector(
     (state: RootState) => state.todos.items
   );
-  const sortedTodos = [...userTodos].sort((a, b) => a.index - b.index);
-  const todosToRender = sortedTodos.filter((todo) => todo.status === name);
+  const filteredTodos = todosFromState.filter((todo) => todo.status === name);
 
   return (
     <div className="section p-2">
-      {todosToRender.length !== 0
-        ? (
-            todosToRender.map((todo) => (
+      {filteredTodos.length !== 0 ? (
+        filteredTodos.map((todo) => (
           <div key={todo.id} className={'mb-5'}>
             <TodoCard todo={todo} key={todo.id} />
           </div>
-            ))
-          )
-        : (
+        ))
+      ) : (
         <div className="content has-text-centered">
           No todos here yet. Drop some todo <strong>right here</strong>!
         </div>
-          )}
+      )}
     </div>
   );
 };
