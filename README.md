@@ -1,6 +1,7 @@
 # Client for Kanban-board-task
 
 In this task I've implemented a simple but reliable and easy-to-use UI for kanban-board.
+
 DEMO LINK: https://anton-kuchmasov.github.io/client-kanban-board-task/
 
 Technologies I've used on my way to deploy:
