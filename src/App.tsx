@@ -8,7 +8,7 @@ import { type RootState } from './app/store.ts';
 
 import './App.css';
 
-function App(): JSX.Element {
+function App (): JSX.Element {
   const userID = useAppSelector((state: RootState) => state.user.id);
   const hasError = useAppSelector((state: RootState) => state.todos.hasError);
 
@@ -16,11 +16,13 @@ function App(): JSX.Element {
     <div className="container is-fluid vw-100">
       <div className="container mt-6">
         <Header />
-        {hasError === false && userID !== null && userID !== undefined ? (
+        {hasError === false && userID !== null && userID !== undefined
+          ? (
           <Kanban />
-        ) : (
+            )
+          : (
           <ErrorMessage />
-        )}
+            )}
       </div>
     </div>
   );

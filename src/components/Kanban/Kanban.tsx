@@ -129,11 +129,13 @@ export const Kanban: React.FC = () => {
     }
   };
 
-  return isLoaded ? (
+  return isLoaded
+    ? (
     <div className="is-flex is-justify-content-center">
       <Loader />
     </div>
-  ) : (
+      )
+    : (
     <>
       <div className="subtitle has-text-centered is-size-4">
         Your user ID is : {userID}
@@ -220,5 +222,5 @@ export const Kanban: React.FC = () => {
         </div>
       </DragDropContext>
     </>
-  );
+      );
 };

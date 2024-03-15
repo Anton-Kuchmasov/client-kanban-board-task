@@ -3,7 +3,7 @@ import { Draggable } from 'react-beautiful-dnd';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEdit, faTrash } from '@fortawesome/free-solid-svg-icons';
 
-import { useAppDispatch, useAppSelector } from '../../app/hooks.ts';
+import { useAppDispatch } from '../../app/hooks.ts';
 import {
   actions as TodosActions,
   deleteTodoById,
@@ -20,7 +20,6 @@ interface Props {
 
 export const TodoCard: React.FC<Props> = ({ todo }) => {
   const dispatch = useAppDispatch();
-  const isCreating = useAppSelector((state) => state.todos.isCreating);
   const { title, description } = todo;
   const userID = todo.userID;
 
@@ -64,7 +63,7 @@ export const TodoCard: React.FC<Props> = ({ todo }) => {
       draggableId={todo.id}
       index={todo.index}
       key={todo.id}
-      isDragDisabled={isCreating}
+      isDragDisabled={isEditing}
     >
       {(provided) => {
         return (

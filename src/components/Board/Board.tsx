@@ -19,17 +19,19 @@ export const Board: React.FC<Props> = ({ name }) => {
 
   return (
     <div className="section p-2">
-      {filteredTodos.length !== 0 ? (
-        filteredTodos.map((todo) => (
+      {filteredTodos.length !== 0
+        ? (
+            filteredTodos.map((todo) => (
           <div key={todo.id} className={'mb-5'}>
             <TodoCard todo={todo} key={todo.id} />
           </div>
-        ))
-      ) : (
+            ))
+          )
+        : (
         <div className="content has-text-centered">
           No todos here yet. Drop some todo <strong>right here</strong>!
         </div>
-      )}
+          )}
     </div>
   );
 };
