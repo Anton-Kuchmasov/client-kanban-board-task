@@ -21,6 +21,7 @@ import { TodoStatus } from '../../types/TodoStatus.ts';
 import { type Todo } from '../../types/Todo.ts';
 import { EditForm } from '../EditForm/EditForm.tsx';
 import { Loader } from '../Loader/Loader.tsx';
+import { Error } from '../../types/Error.ts';
 
 export const Kanban: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -33,12 +34,16 @@ export const Kanban: React.FC = () => {
     (state: RootState) => state.todos.isCreating
   );
 
-  const normalizedUserID: number = Number(userID) !== 0 ? Number(userID) : 0;
+  const normalizedUserID: number = Number(userID) ? Number(userID) : 0;
 
   useEffect(() => {
     const fetchData = async (): Promise<void> => {
-      if (normalizedUserID !== 0) {
-        await dispatch(fetchTodosFromUserID(normalizedUserID));
+      if (normalizedUserID) {
+        try {
+          await dispatch(fetchTodosFromUserID(normalizedUserID));
+        } catch (error) {
+          dispatch(TodosActions.setError(Error.LOAD_TODOS));
+        }
       }
     };
     void fetchData();
@@ -54,22 +59,26 @@ export const Kanban: React.FC = () => {
     title: string,
     description: string
   ): Promise<void> => {
-    if (title.trim().length === 0) {
+    if (!title.trim().length) {
       dispatch(TodosActions.setIsCreating(false));
       return;
     }
 
-    await dispatch(
-      addNewTodo({
-        title,
-        description,
-        userID: normalizedUserID,
-        todos
-      })
-    );
-    dispatch(TodosActions.setIsCreating(false));
+    try {
+      await dispatch(
+        addNewTodo({
+          title,
+          description,
+          userID: normalizedUserID,
+          todos
+        })
+      );
+      dispatch(TodosActions.setIsCreating(false));
 
-    await dispatch(fetchTodosFromUserID(normalizedUserID));
+      await dispatch(fetchTodosFromUserID(normalizedUserID));
+    } catch (error) {
+      dispatch(TodosActions.setError(Error.ADD_TODO));
+    }
   };
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>): void => {
@@ -82,7 +91,7 @@ export const Kanban: React.FC = () => {
   };
 
   const handleDragEnd = async (result: DropResult): Promise<void> => {
-    if (result.destination === undefined || result.destination === null) {
+    if (!result.destination) {
       return;
     }
 
@@ -92,24 +101,27 @@ export const Kanban: React.FC = () => {
 
     const movedTodo = todos.find((todo) => todo.id === movedTodoId);
 
-    if (movedTodo === null || movedTodo === undefined) {
+    if (!movedTodo) {
       return;
     }
 
     if (movedTodo.status === destinationColumn) {
-      const newTodos = [...todos];
-      const sourceTodos = newTodos.filter((todo) => todo.id !== movedTodoId);
+      const sourceTodos = todos.filter((todo) => todo.id !== movedTodoId);
       const destinationIndex: number = destination.index;
       sourceTodos.splice(destinationIndex - 1, 0, movedTodo);
 
       dispatch(TodosActions.setTodos(sourceTodos));
       dispatch(TodosActions.updateLocalTodoIndexes());
 
-      await dispatch(updateAllTodosIndexes());
+      try {
+        await dispatch(updateAllTodosIndexes());
+      } catch (error) {
+        dispatch(TodosActions.setError(Error.UPDATE_TODO));
+      }
       return;
     }
 
-    if (movedTodo.status !== undefined) {
+    if (movedTodo.status) {
       dispatch(
         TodosActions.updateLocalTodoStatus({
           id: movedTodoId,
@@ -119,23 +131,25 @@ export const Kanban: React.FC = () => {
 
       dispatch(TodosActions.updateLocalTodoIndexes());
 
-      await dispatch(
-        updateTodoStatusOnDrop({
-          id: movedTodoId,
-          status: destinationColumn as TodoStatus
-        })
-      );
-      await dispatch(updateAllTodosIndexes());
+      try {
+        await dispatch(
+          updateTodoStatusOnDrop({
+            id: movedTodoId,
+            status: destinationColumn as TodoStatus
+          })
+        );
+        await dispatch(updateAllTodosIndexes());
+      } catch (error) {
+        dispatch(TodosActions.setError(Error.UPDATE_TODO));
+      }
     }
   };
 
-  return isLoaded
-    ? (
+  return isLoaded ? (
     <div className="is-flex is-justify-content-center">
       <Loader />
     </div>
-      )
-    : (
+  ) : (
     <>
       <div className="subtitle has-text-centered is-size-4">
         Your user ID is : {userID}
@@ -222,5 +236,5 @@ export const Kanban: React.FC = () => {
         </div>
       </DragDropContext>
     </>
-      );
+  );
 };

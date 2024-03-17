@@ -30,7 +30,7 @@ export const EditForm: React.FC<Props> = ({
   const titleField = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    if (titleField.current !== null) {
+    if (titleField.current) {
       titleField.current.focus();
     }
   }, []);
@@ -85,7 +85,7 @@ export const EditForm: React.FC<Props> = ({
           type="button"
           className="button button__save mr-2"
           onClick={handleSave}
-          disabled={editedTitle?.trim().length === 0}
+          disabled={!editedTitle?.trim().length}
         >
           <FontAwesomeIcon icon={faFloppyDisk} />
         </button>

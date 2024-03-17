@@ -1,7 +1,7 @@
 import { type Todo } from '../types/Todo.ts';
 
 export const getIndex = (todos: Todo[]): number => {
-  if (todos.length === 0) {
+  if (!todos.length) {
     return 1;
   }
 

@@ -3,16 +3,16 @@ import { Draggable } from 'react-beautiful-dnd';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEdit, faTrash } from '@fortawesome/free-solid-svg-icons';
 
-import { useAppDispatch } from '../../app/hooks.ts';
+import { useAppDispatch, useAppSelector } from '../../app/hooks.ts';
 import {
   actions as TodosActions,
   deleteTodoById,
-  fetchTodosFromUserID,
   updateTodoOnServer
 } from '../../features/todos/todosSlice.ts';
 
 import { EditForm } from '../EditForm/EditForm.tsx';
 import { type Todo } from '../../types/Todo.ts';
+import { Error } from '../../types/Error.ts';
 
 interface Props {
   todo: Todo;
@@ -20,8 +20,7 @@ interface Props {
 
 export const TodoCard: React.FC<Props> = ({ todo }) => {
   const dispatch = useAppDispatch();
-  const { title, description } = todo;
-  const userID = todo.userID;
+  const { title, description, id } = todo;
 
   const [isEditing, setIsEditing] = useState(false);
 
@@ -35,23 +34,39 @@ export const TodoCard: React.FC<Props> = ({ todo }) => {
     descriptionUpdated: string,
     todoID: string
   ): Promise<void> => {
-    if (titleUpdated.length === 0) {
+    if (!titleUpdated.length) {
       return;
     }
-
-    await dispatch(
-      updateTodoOnServer({
+    dispatch(
+      TodosActions.localUpdate({
         id: todoID,
         title: titleUpdated,
         description: descriptionUpdated
       })
     );
-    await dispatch(fetchTodosFromUserID(userID));
+    setIsEditing(false);
+
+    try {
+      void dispatch(
+        updateTodoOnServer({
+          id: todoID,
+          title: titleUpdated,
+          description: descriptionUpdated
+        })
+      );
+      setIsEditing(false);
+    } catch (error) {
+      dispatch(TodosActions.setError(Error.UPDATE_TODO));
+    }
   };
 
   const handleDelete = (todoID: string): void => {
     dispatch(TodosActions.localDelete(todoID));
-    void dispatch(deleteTodoById(todoID));
+    try {
+      void dispatch(deleteTodoById(todoID));
+    } catch (error) {
+      dispatch(TodosActions.setError(Error.DELETE_TODO));
+    }
   };
 
   const handleCancel = (): void => {

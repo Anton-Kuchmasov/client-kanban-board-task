@@ -131,31 +131,51 @@ export const todosSlice = createSlice({
     setTodos: (state, action: PayloadAction<Todo[]>) => {
       state.items = action.payload;
     },
-    updateLocalTodoStatus (
-      state,
-      action: PayloadAction<UpdateTodoStatusOnDropData>
-    ) {
+    updateLocalTodoStatus(state, action: PayloadAction<UpdateTodoStatusOnDropData>) {
       const { id, status } = action.payload;
+      const updatedItems = state.items.map((todo) =>
+        todo.id === id ? { ...todo, status } : todo
+      );
+
       return {
         ...state,
-        items: state.items.map((todo) =>
-          todo.id === id ? { ...todo, status } : todo
-        )
+        items: updatedItems
       };
     },
-    updateLocalTodoIndexes (state) {
-      state.items.forEach((todo, index) => {
-        const existingTodo = state.items.find((t) => t.id === todo.id);
-        if (existingTodo != null) {
-          existingTodo.index = index + 1;
-        }
-      });
+    updateLocalTodoIndexes(state) {
+      const updatedItems = state.items.map((todo, index) => ({
+        ...todo,
+        index: index + 1
+      }));
+
+      return {
+        ...state,
+        items: updatedItems
+      };
     },
     setIsCreating: (state, action: PayloadAction<boolean>) => {
       state.isCreating = action.payload;
     },
     setError: (state, action: PayloadAction<Error | false>) => {
       state.hasError = action.payload;
+    },
+    localUpdate: (state, action: PayloadAction<UpdateTodoContentData>) => {
+      const { id, title, description } = action.payload;
+      const index = state.items.findIndex(todo => todo.id === id);
+      if (index === -1) {
+        return;
+      }
+      const updatedTodo = {
+        ...state.items[index],
+        title,
+        description
+      };
+      const updatedItems = [
+        ...state.items.slice(0, index),
+        updatedTodo,
+        ...state.items.slice(index + 1)
+      ];
+      state.items = updatedItems;
     },
     localDelete: (state, action: PayloadAction<string>) => {
       state.items = state.items.filter((todo) => todo.id !== action.payload);

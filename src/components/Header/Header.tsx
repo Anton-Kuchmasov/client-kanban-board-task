@@ -13,7 +13,7 @@ import { type RootState } from '../../app/store.ts';
 export const Header: React.FC = () => {
   const dispatch = useAppDispatch();
   const hasNoTodos = useAppSelector(
-    (state: RootState) => state.todos.items.length === 0
+    (state: RootState) => !state.todos.items.length
   );
   const userID = useAppSelector((state: RootState) => state.user.id);
   const isLoading = useAppSelector((state: RootState) => state.todos.isLoading);
@@ -21,7 +21,7 @@ export const Header: React.FC = () => {
   const titleField = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    if (titleField.current !== null) {
+    if (titleField.current) {
       titleField.current.focus();
     }
   }, []);
@@ -39,7 +39,7 @@ export const Header: React.FC = () => {
         dispatch(TodosActions.setError(Error.LOAD_TODOS));
       });
 
-    if (titleField.current !== null) {
+    if (titleField.current) {
       titleField.current.value = '';
     }
   };
@@ -96,7 +96,7 @@ export const Header: React.FC = () => {
                   type="submit"
                   className="button is-size-5 is-info"
                   onClick={handleNew}
-                  disabled={(hasNoTodos && userID !== undefined) || isLoading}
+                  disabled={(hasNoTodos && !!userID) ?? isLoading}
                 >
                   Create new board
                 </button>
